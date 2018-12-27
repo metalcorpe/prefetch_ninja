@@ -96,15 +96,26 @@ def BuildfileInformation30(metricsCount, traceChainsOffset, traceChainsCount, fi
         + lastRunTime + unknown1 + runCount + unknown2 + unknown3 + unknown4
 
 
-def metricsArray30():
+def BuildmetricsArray30(unknown0, unknown1, unknown2, filenameOffset, filenameLength, unknown3, mftRecordNumber,
+                   mftSeqNumber):
     # File Metrics Array
     # 32 bytes per array, not parsed in this script
-    infile.seek(self.metricsOffset)
-    unknown0 = infile.read(4)
-    unknown1 = infile.read(4)
-    unknown2 = infile.read(4)
-    self.filenameOffset = struct.unpack_from("I", infile.read(4))[0]
-    self.filenameLength = struct.unpack_from("I", infile.read(4))[0]
-    unknown3 = infile.read(4)
-    self.mftRecordNumber = self.convertFileReference(infile.read(6))
-    self.mftSeqNumber = struct.unpack_from("H", infile.read(2))[0]
+    # infile.seek(self.metricsOffset)
+    unknown0 = struct.pack('I', unknown0)
+    unknown1 = struct.pack('I', unknown1)
+    unknown2 = struct.pack('I', unknown2)
+    filenameOffset = struct.pack('I', filenameOffset)
+    filenameLength = struct.pack('I', filenameLength)
+    unknown3 = struct.pack('I', unknown3)
+    mftRecordNumber = mftRecordNumber
+    mftSeqNumber = struct.pack('H', mftSeqNumber)
+
+    return unknown0 + unknown1 + unknown2 + filenameOffset + filenameLength + unknown3 + mftRecordNumber + mftSeqNumber
+
+
+def traceChainsArray30(total_block, uknown0, uknown1, uknown2):
+    # Trace Chains Array
+    # Read though, not being parsed for information
+    # 8 bytes
+    trace_chane = struct.pack('IBBH', total_block, uknown0, uknown1, uknown2)
+    return trace_chane
