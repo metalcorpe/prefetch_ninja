@@ -26,8 +26,9 @@ def tohex(val, nbits):
     """Utility to convert (signed) integer to hex."""
     return hex((val + (1 << nbits)) % (1 << nbits))
 
-def compress(algo:CompAlgo, uncompressed,
-             engine:CompEngi=CompEngi.COMPRESSION_ENGINE_STANDARD, chunk_size:int=4096):
+
+def compress(algo: CompAlgo, uncompressed,
+             engine: CompEngi = CompEngi.COMPRESSION_ENGINE_STANDARD, chunk_size: int = 4096):
 
     calgo = algo.value|engine.value
 
@@ -85,12 +86,12 @@ def compress(algo:CompAlgo, uncompressed,
 
     return algo, compressed
 
-def header(algo, uncompressed, crc):
+def header(algo, uncompressed):
     if algo is 4:
         sig = 0x44d414d
         import binascii, struct
         # crc = binascii.crc32(compressed)
-        header = struct.pack('<LL',sig,len(uncompressed))
+        header = struct.pack('<LL', sig, len(uncompressed))
 
         return header
 

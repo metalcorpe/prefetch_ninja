@@ -277,8 +277,8 @@ class Prefetch(object):
 			self.fileRefCount = struct.unpack_from("I", infile.read(4))[0]
 			self.dirStringsOffset = struct.unpack_from("I", infile.read(4))[0]
 			self.dirStringsCount = struct.unpack_from("I", infile.read(4))[0]
-			unknown0 = infile.read(60)
-
+			unknown0 = struct.unpack_from('15I',infile.read(60))
+			unknown0 = unknown0
 			self.directoryStringsArray.append(self.directoryStrings(infile))
 
 			infile.seek(self.volumesInformationOffset + self.volPathOffset)

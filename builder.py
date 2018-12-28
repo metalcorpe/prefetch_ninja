@@ -66,6 +66,7 @@ def build_header(unknown0, file_size, executable_name, hash, unknown1, version: 
 def build_file_information_30(metrics_count, trace_chains_offset, trace_chains_count, filename_strings_offset,
                               filename_strings_size, volumes_information_offset, volumes_count,
                               volumes_information_size, unknown0, last_run_time):
+
     # File Information
     # 224 bytes
     metrics_offset = 304
@@ -126,9 +127,10 @@ def build_trace_chains_array30(total_block, unknown0, unknown1, unknown2):
 def build_filename_strings(filename_strings: list):
     tmp = b''
     for i in filename_strings:
-        tmp += i.encode('utf-16-le')
+        tmp += i.decode().encode('utf-16-le') + b'\x00\x00'
+        # print(tmp)
     
-    return tmp
+    return tmp[:-2]
 
 
 def build_volume_information_30(volumes_count,
