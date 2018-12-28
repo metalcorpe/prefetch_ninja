@@ -52,9 +52,9 @@ def build_header(unknown0, file_size, executable_name, hash, unknown1, version: 
     file_size = struct.pack('I', file_size)
     executable_name = struct.pack('60s', executable_name.encode('utf-16-le'))
     # TODO: Calculate HASH
-    raw_hash = struct.pack("I", 1)
-    # raw_hash = hex(struct.unpack_from("I", infile.read(4))[0])
-    # hash = raw_hash.lstrip("0x")
+    raw_hash = struct.pack('I', 1)
+    # raw_hash = hex(struct.pack('I', infile.read(4))[0])
+    # hash = raw_hash.lstrip('0x')
 
     unknown1 = struct.pack('I', 0)
 
@@ -101,7 +101,7 @@ def build_metrics_array30(unknown0, unknown1, unknown2, filename_offset, filenam
                           mft_seq_number):
     # File Metrics Array
     # 32 bytes per array, not parsed in this script
-    # infile.seek(self.metricsOffset)
+    # infile.seek(metricsOffset)
     unknown0 = struct.pack('I', unknown0)
     unknown1 = struct.pack('I', unknown1)
     unknown2 = struct.pack('I', unknown2)
@@ -127,4 +127,51 @@ def build_filename_strings(filename_strings: list):
     tmp = b''
     for i in filename_strings:
         tmp += i.encode('utf-16-le')
-    pass
+    
+    return tmp
+
+
+def build_volume_information_30(volumes_count,
+                                vol_path_offset, vol_path_length, vol_creation_time, vol_serial_number,
+                                file_ref_offset, file_ref_count, dir_strings_offset, dir_strings_count,
+                                unknown0, unknown1, unknown2, unknown3, unknown4):
+    # Volumes Information
+    # 96 bytes
+
+    # infile.seek(volumesInformationOffset)
+
+    volumesInformationArray = []
+    directoryStringsArray = []
+
+    count = 0
+    while count < volumes_count:
+
+        vol_path_offset = struct.pack('I', vol_path_offset)
+        vol_path_length = struct.pack('I', vol_path_length)
+        vol_creation_time = struct.pack('Q', vol_creation_time)
+        vol_serial_number = int(f'0x{vol_serial_number}', 16)
+        vol_serial_number = struct.pack('I', vol_serial_number)
+        file_ref_offset = struct.pack('I', file_ref_offset)
+        file_ref_count = struct.pack('I', file_ref_count)
+        dir_strings_offset = struct.pack('I', dir_strings_offset)
+        dir_strings_count = struct.pack('I', dir_strings_count)
+        unknown0 = struct.pack('I', unknown0)
+        unknown1 = struct.pack('6I', unknown1)
+        unknown2 = dir_strings_count
+        unknown2 = struct.pack('I', unknown2)
+        unknown3 = struct.pack('6I', unknown3)
+        unknown4 = struct.pack('I', unknown4)
+
+
+
+        directoryStringsArray.append(directoryStrings(infile))
+
+        infile.seek(volumesInformationOffset + vol_path_offset)
+        volume = {}
+        volume['Volume Name'] = infile.read(vol_path_length * 2).replace('\x00'.encode(), ''.encode())
+        volume['Creation Date'] = convertTimestamp(vol_creation_time)
+        volume['Serial Number'] = vol_serial_number
+        volumesInformationArray.append(volume)
+
+        count += 1
+        infile.seek(volumesInformationOffset + (96 * count))
