@@ -1,7 +1,7 @@
 import struct
 import enum
 import datetime
-
+import os
 
 class WinVer(enum.Enum):
     XP_2003 = 17
@@ -42,23 +42,28 @@ def ssca_2008_hash_function(filename):
     return hash_value
 
 
-def build_header(unknown0, file_size, executable_name, hash, unknown1, version: enum = WinVer.Win10):
+def build_header(file_size, executable,
+                 # exe_hash = None,
+                 version: enum = WinVer.Win10, volume_id: int = 2, unknown0: int = 17, unknown1: int = 0):
     signature = 'SCCA'
     # Parse the file header
     # 84 bytes
     version = struct.pack('I', version.value)
     signature = signature.encode()
-    unknown0 = struct.pack('I', 17)  # 15 or 17
+    unknown0 = struct.pack('I', unknown0)  # 15 or 17
     file_size = struct.pack('I', file_size)
-    executable_name = struct.pack('60s', executable_name.encode('utf-16-le'))
-    # TODO: Calculate HASH
-    raw_hash = struct.pack('I', 1)
-    # raw_hash = hex(struct.pack('I', infile.read(4))[0])
-    # hash = raw_hash.lstrip('0x')
 
-    unknown1 = struct.pack('I', 0)
+    _, filename = os.path.split(executable)
+    executable_name = struct.pack('60s', filename.encode('utf-16-le'))
 
-    header = version + signature + unknown0 + file_size + executable_name + raw_hash + unknown1
+    _, path = os.path.splitdrive(executable)
+    file_for_hash = f'\DEVICE\HARDDISKVOLUME{volume_id}{path}'.upper().encode('utf-16-le').decode()
+    raw_hash = ssca_2008_hash_function(file_for_hash)
+    exe_hash = struct.pack('I', int(hex(raw_hash), 16))
+
+    unknown1 = struct.pack('I', unknown1)
+
+    header = version + signature + unknown0 + file_size + executable_name + exe_hash + unknown1
 
     return header
 

@@ -4,7 +4,7 @@ import builder
 import comp
 
 d = prefetch.DecompressWin10()
-infile = 'C:\Windows\Prefetch\\7ZG.EXE-0F8C4081.pf'
+infile = 'C:\Windows\Prefetch\\7ZFM.EXE-69B8961D.pf'
 f0 = open(infile, 'rb')
 if f0.read(3) == b'MAM':
     f0.close()
