@@ -3,6 +3,12 @@ import enum
 import datetime
 import os
 
+FILE_HEADER = (0, 84)
+FILE_INFORMATION = (FILE_HEADER[1], FILE_HEADER[1] + 224)
+FILE_METRICS_ARRAY = (304 , 304 + 32)
+FILE_CHAIN_ARRAY = (FILE_METRICS_ARRAY[1], FILE_METRICS_ARRAY[1] + 8)
+
+
 class WinVer(enum.Enum):
     XP_2003 = 17
     Vista_7 = 23

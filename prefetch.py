@@ -250,14 +250,15 @@ class Prefetch(object):
 		unknown1 = infile.read(16)
 		self.runCount = struct.unpack_from("I", infile.read(4))[0]
 		unknown2 = infile.read(96)
-		unknown2
-	#Here
+
+	# Here
 	def traceChainsArray30(self, infile):
 		# Trace Chains Array
 		# Read though, not being parsed for information
 		# 8 bytes
-		infile.read(8)
-	#Here
+		self.traceChainsArray = infile.read(8)
+
+	# Here
 	def volumeInformation30(self, infile):
 		# Volumes Information
 		# 96 bytes
