@@ -71,7 +71,7 @@ def build_header(file_size, executable,
 def build_file_information_30(metrics_count, trace_chains_offset, trace_chains_count, filename_strings_offset,
                               filename_strings_size, volumes_information_offset, volumes_count,
                               volumes_information_size, unknown0, last_run_time):
-
+    import win_time
     # File Information
     # 224 bytes
     metrics_offset = 304
@@ -88,7 +88,8 @@ def build_file_information_30(metrics_count, trace_chains_offset, trace_chains_c
     run_count = len(last_run_time)
     tmp = b''
     for i in last_run_time:
-        delta = datetime.datetime.fromtimestamp(i) - datetime.datetime(1601, 1, 1)
+        delta = win_time.convert_back(i)
+        # delta = datetime.datetime.fromtimestamp(i) - datetime.datetime(1601, 1, 1)
         tmp += struct.pack('Q', delta)
     tmp += struct.pack('Q', 0) * (8 - run_count)
     last_run_time = tmp
