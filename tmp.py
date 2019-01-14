@@ -5,7 +5,8 @@ import comp
 
 d = prefetch.DecompressWin10()
 # infile = 'C:\Windows\Prefetch\\7ZFM.EXE-69B8961D.pf'
-infile = 'C:\\Users\\v.vouvoutsis\OneDrive\dis\Windows-Prefetch-Parser\TestFiles\Win10\CALC.EXE-3FBEF7FD.pf'
+# infile = 'C:\\Users\\v.vouvoutsis\OneDrive\dis\Windows-Prefetch-Parser\TestFiles\Win10\CALC.EXE-3FBEF7FD.pf'
+infile = 'CALC.EXE-3FBEF7FD.pf'
 
 f0 = open(infile, 'rb')
 if f0.read(3) == b'MAM':
